@@ -1,0 +1,48 @@
+2014-05-14:
+- In the output files for random and grid points, output values were for the
+  'real' point list rather than for the random or grid point lists. This has now
+  been fixed.
+- For Monte Carlo simulations, fixed a bug that caused simulated particles within
+  profile holes to be accepted as valid when simulation window was set to
+  "profile + shell".
+- View file dialog is now properly destroyed when closed.
+- PyExcelerator is again included in the Window binaries.
+2014-01-24:
+- Fixed a bug that caused a failure to execute when using the latest version
+  of wxPython. 
+2012-07-12:
+- Fixed a bug, reported by Megan Dowie, that generated an error when trying to 
+  calculate interpoint distances from an input file that does not contain random 
+  points.
+2011-10-14:
+- Fixed a bug that caused the number of holes to always be shown as 0 in the
+  log, and prevented them from being validated with respect to crossing 
+  vertices (the holes were correctly accounted for in the output data though).
+- Fixed a bug that prevented certain options that should be reset between runs
+  from actually being so.
+2010-10-07:
+- Allows PARTICLES as a synonym for the keyword POINTS in coordinate files to
+  accommodate for an old plugin (ParticleDensityRandomBox).
+2010-09-02:
+- Fixed a bug that prevented some options from being loaded from the
+  configuration file.
+2010-08-17:
+- Because also random points and other particle-like points are instances of the
+  Particle class, this class was for clarity renamed Point. At the same time the
+  import method of the geometry module was changed, so that objects in this
+  module (including the geometry.Point class) are accessed using geometry.*.
+- Fixed a bug where simulated-particle and particle-simulated interpoint
+  distances were never saved to output files.
+2010-07-05:
+- Implemented a number of things from Synapse.py, including interpoint distances
+  between points and simulated points, and the option to specify Monte Carlo
+  simulation window.
+- Now saves current input directory to a config file named '.pointdensity.cfg'
+  in the user's home directory.
+- Current options can also be saved to '.pointdensity.cfg'. Options specified
+  in that file will be loaded when the program is started.
+- "Skipping distance" was renamed "Shell width".
+- The processing now takes place in a separate thread; while processing, a
+  progress dialog is shown which allows for cancellation of the processing.
+- A number of minor bug fixes and other changes aimed at simplifying the code.
+
