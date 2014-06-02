@@ -1,5 +1,5 @@
 #
-#    Module      : wxAboutDialog.py
+#    Module      : aboutdalog.py
 #    Description : an About dialog
 #
 #    Copyright 2014 Max Larsson <max.larsson@liu.se>

@@ -1,5 +1,5 @@
 #
-#    Module      : wxViewFileDialog.py
+#    Module      : viewfiledialog.py
 #    Description : Provides dialog for viewing input files
 #
 #    Copyright 2014 Max Larsson <max.larsson@liu.se>

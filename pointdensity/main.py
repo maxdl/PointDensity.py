@@ -1,32 +1,13 @@
-#
-#    Module      : main.py
-#    Description : Processes input data and generates output
-#
-#    Copyright 2014 Max Larsson <max.larsson@liu.se>
-#
-#    This file is part of PointDensity.
-#
-#    PointDensity is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    PointDensity is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with PointDensity.  If not, see <http://www.gnu.org/licenses/>.
+# -*- coding: utf-8 -*-
 
 from __future__ import with_statement
 import sys
 import os.path
 import time
 import datetime
-from classes import *
+from core import *
 import geometry
-from fileIO import *
+from file_io import *
 import version
 import stringconv
 
@@ -43,12 +24,6 @@ def saveOutput(profileli, opt):
 
     def m2(x, pixelwidth):
             return geometry.toMetricUnits(x, pixelwidth**2)  # for area units...
-    
-    def m_inv(x):
-        try:
-            return 1 / m(1 / x)
-        except (TypeError, ZeroDivisionError):
-            return None
 
     def na(x):
         if x in (None, -1):
@@ -128,14 +103,14 @@ def saveOutput(profileli, opt):
                           m2(pro.path.area(), pro.pixelwidth),
                           len(pro.pli),
                           len([p for p in pro.pli
-                               if p.isWithinProfile(pro.path)]),
+                               if p.is_within_profile(pro.path)]),
                           len([p for p in pro.pli
-                               if (p.isWithinProfile(pro.path) or
+                               if (p.is_within_profile(pro.path) or
                                    p.isAssociatedWithPath)]),
                           len([p for p in pro.pli
                                     if p.isAssociatedWithPath]),
                           1e6*(len([p for p in pro.pli
-                                     if p.isWithinProfile(pro.path)])
+                                     if p.is_within_profile(pro.path)])
                                  / m2(pro.path.area(), pro.pixelwidth)),
                           pro.ID,
                           os.path.basename(pro.inputfn),
@@ -173,9 +148,9 @@ def saveOutput(profileli, opt):
                         "Comment"])
             f.writerows([[n+1, 
                           m(p.distToPath, pro.pixelwidth),                                                    
-                          yes_or_no(p.isWithinProfile(pro.path)),
+                          yes_or_no(p.is_within_profile(pro.path)),
                           yes_or_no(p.isAssociatedWithPath),  
-                          yes_or_no(p.isWithinProfile(pro.path) or
+                          yes_or_no(p.is_within_profile(pro.path) or
                                     p.isAssociatedWithPath),  
                           pro.ID,
                           os.path.basename(pro.inputfn), 

@@ -1,24 +1,3 @@
-#
-#    Module      : wxFrame.py
-#    Description : Core GUI
-#
-#    Copyright 2014 Max Larsson <max.larsson@liu.se>
-#
-#    This file is part of PointDensity.
-#
-#    PointDensity is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    PointDensity is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with PointDensity.  If not, see <http://www.gnu.org/licenses/>.
-
 import ConfigParser
 import os
 import os.path
@@ -28,13 +7,13 @@ import threading
 import time
 import traceback
 import wx
-import fileIO
+import file_io
 import gui
 import main
 import stringconv
 import version
-import wxAboutDialog
-import wxViewFileDialog
+import aboutdalog
+import viewfiledialog
 
 
 class wxFrame(gui.MainFrame):
@@ -53,7 +32,6 @@ class wxFrame(gui.MainFrame):
         self.LoadOptionsFromConfig()
         self.SetOptionsInUI()
         self.Fit()
-              
 
     def OnAddFile(self, event):
         dlg = wx.FileDialog(self, "Choose a file", ".", "", "*%s"
@@ -87,7 +65,7 @@ class wxFrame(gui.MainFrame):
                               self.InputFileListCtrl.GetItem(i, 0).m_text)   
         except IOError:
             self.ShowError("Could not open file.")
-        dlg = wxViewFileDialog.wxViewFileDialog(self, fn)
+        dlg = viewfiledialog.wxViewFileDialog(self, fn)
         try:
             dlg.ShowModal()
         finally:
@@ -204,7 +182,7 @@ class wxFrame(gui.MainFrame):
 
 
     def OnAbout(self, event):
-        dlg = wxAboutDialog.wxAboutDialog(self)
+        dlg = aboutdalog.wxAboutDialog(self)
         try:
             dlg.ShowModal()
         finally:
@@ -574,7 +552,7 @@ class wxFrame(gui.MainFrame):
             try:
                 if os.path.exists(logfn):
                     if self.IfLogExistsRadioBox.GetStringSelection() == "Enumerate":
-                        logfn = fileIO.enumFilename(logfn, 2)
+                        logfn = file_io.enumFilename(logfn, 2)
                     else:
                         f = open(logfn, "a", 0)
                         f.close()

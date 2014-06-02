@@ -14,6 +14,7 @@ Please see the [website](http://www.hu.liu.se/forskning/larsson-max/software)
 for more information.
 
 ## License
-Copyright 2014 Max Larsson [<max.larsson@liu.se>](mailto:max.larsson@liu.se)
+Copyright 2001-2014 Max Larsson [<max.larsson@liu.se>](mailto:max.larsson@liu
+.se)
 
-DistToPath.py is released under the MIT license.
+PointDensity.py is released under the MIT license.
