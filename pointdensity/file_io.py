@@ -18,18 +18,18 @@ class FileWriter():
                                self.opt.output_filename_suffix +
                                self.opt.output_filename_ext)
         if (os.path.exists(self.fn) and
-                    self.opt.action_if_output_file_exists == 'enumerate'):
+                self.opt.action_if_output_file_exists == 'enumerate'):
                 self.fn = enum_filename(self.fn, 2)
         if self.opt.output_file_format == 'csv':
             import unicode_csv as writer
             self.f = writer.Writer(file(self.fn, 'w'),
-                                        **self.opt.csv_format)
+                                   **self.opt.csv_format)
         elif self.opt.output_file_format == 'excel':
             import xls as writer
             self.f = writer.Writer(self.fn)
         return self.f
 
-    def __exit__(self, type, val, tb):
+    def __exit__(self, _type, _val, tb):
         try:
             if tb is not None:
                 raise IOError

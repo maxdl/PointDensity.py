@@ -31,15 +31,16 @@ class Point(geometry.Point):
         self.ptype = ptype
         self.cluster = None
         self.dist_to_path = None
+        self.is_within_profile = None
         self.is_associated_with_path = None
         self.is_associated_with_profile = None
         self.nearest_neighbour_dist = None
-        self.nearest_neighbour_point = Point()
+        self.nearest_neighbour_point = geometry.Point()
         self.nearest_lateral_neighbour_dist = None
-        self.nearest_lateral_neighbour_point = Point()
+        self.nearest_lateral_neighbour_point = geometry.Point()
 
-    def determine_stuff(self, profile, opt):
-        if self.is_within_hole(profile.path):
+    def determine_stuff(self, profile):
+        if self.__is_within_hole(profile.path):
             if self.ptype == "point":
                 profile_message("Discarding point at %s: Located "
                                 "within a profile hole" % self)
@@ -48,8 +49,9 @@ class Point(geometry.Point):
             return
         self.dist_to_path = self.perpend_dist_closed_path(profile.path)
         if not self.is_within_polygon(profile.path):
-            if self.dist_to_path > geometry.to_pixel_units(opt.shell_width,
-                                                           profile.pixelwidth):
+            if self.dist_to_path > geometry.to_pixel_units(
+                    profile.opt.shell_width,
+                    profile.pixelwidth):
                 if self.ptype == "point":
                     profile_message("Discarding point at %s: "
                                     "Located outside the shell" % self)
@@ -57,24 +59,24 @@ class Point(geometry.Point):
                 profile.nskipped[self.ptype] += 1
                 return
             self.dist_to_path = -self.dist_to_path
+        self.is_within_profile = self.__is_within_profile(profile.path)
         self.is_associated_with_path = (abs(self.dist_to_path)
                                         <= geometry.to_pixel_units(
-                                        opt.spatial_resolution,
+                                        profile.opt.spatial_resolution,
                                         profile.pixelwidth))
-        self.is_associated_with_profile = (self.is_within_profile(profile.path)
+        self.is_associated_with_profile = (self.is_within_profile
                                            or self.is_associated_with_path)
 
-    def is_within_hole(self, profile):
+    def __is_within_hole(self, path):
         """Determine if self is inside a profile hole."""
-        for h in profile.holeli:
+        for h in path.holeli:
             if self.is_within_polygon(h):
                 return True
         return False
 
-    def is_within_profile(self, profile):
+    def __is_within_profile(self, path):
         """Determine if self is inside profile, excluding holes."""
-        if (not self.is_within_polygon(profile)) or self.is_within_hole(
-                profile):
+        if (not self.is_within_polygon(path)) or self.__is_within_hole(path):
             return False
         return True
 
@@ -193,7 +195,7 @@ class ProfileData:
         self.clusterli = []
         self.pp_distli, self.pp_latdistli = [], []
         self.rp_distli, self.rp_latdistli = [], []
-        self.nskipped = {"particle": 0, "random": 0, "grid": 0}
+        self.nskipped = {"point": 0, "random": 0, "grid": 0}
         self.comment = ""
         self.pixelwidth = None
         self.metric_unit = ""
@@ -214,22 +216,22 @@ class ProfileData:
                 self.negloc = self.posloc
                 self.posloc = geometry.Point()
             for p in self.pli:
-                p.determine_stuff(self.pli, self)
+                p.determine_stuff(self)
             self.pli = [p for p in self.pli if not p.skipped]
             if self.opt.use_grid:
                 for g in self.gridli:
-                    g.determine_stuff(self.gridli, self)
+                    g.determine_stuff(self)
                 self.gridli = [g for g in self.gridli if not g.skipped]
             if self.opt.use_random:
                 for r in self.randomli:
-                    r.determine_stuff(self.randomli, self)
+                    r.determine_stuff(self)
                 self.randomli = [r for r in self.randomli if not r.skipped]
-            for ptype in ("particle", "random", "grid"):
+            for ptype in ("point", "random", "grid"):
                 if ((ptype == "random" and not self.opt.use_random) or
                         (ptype == "grid" and not self.opt.use_grid)):
                     continue
                 ptypestr = ("particles"
-                            if ptype == "particle" else ptype + " points")
+                            if ptype == "point" else ptype + " points")
                 sys.stdout.write("  Number of %s skipped: %d\n"
                                  % (ptypestr, self.nskipped[ptype]))
             self.get_interdistlis()
@@ -327,7 +329,7 @@ class ProfileData:
                 return False
             if pt.is_within_profile(self.path):
                 return True
-            if pt.is_within_hole(self.path):
+            if pt.__is_within_hole(self.path):
                 return False
             d = pt.perpend_dist_closed_path(self.path)
             if d is None:
@@ -454,7 +456,7 @@ class ProfileData:
     def __parse(self):
         """Parse profile data from input file."""
         sys.stdout.write("\nParsing '%s':\n" % self.inputfn)
-        li = file_io.readFile(self.inputfn)
+        li = file_io.read_file(self.inputfn)
         if not li:
             raise ProfileError(self, "Could not open input file")
         while li:
@@ -661,12 +663,12 @@ class ProfileData:
         for path in self.path.holeli:
             check_path(path, "Hole")
         for n, h in enumerate(self.path.holeli):
-            if not h.isSimplePolygon():
+            if not h.is_simple_polygon():
                 raise ProfileError(self,
                                    "Profile hole %d is not a simple polygon"
                                    % (n + 1))
             for n2, h2 in enumerate(self.path.holeli[n + 1:]):
-                if h.overlapsPolygon(h2):
+                if h.overlaps_polygon(h2):
                     raise ProfileError(self,
                                        "Profile hole %d overlaps with hole %d "
                                        % (n + 1, n + n2 + 2))
@@ -718,17 +720,17 @@ class ProfileData:
                                          + self.opt.output_filename_ext)
             if (os.path.exists(self.outputfn) and
                     self.opt.action_if_output_file_exists == 'enumerate'):
-                self.outputfn = file_io.enumFilename(self.outputfn, 2)
+                self.outputfn = file_io.enum_filename(self.outputfn, 2)
             sys.stdout.write("Writing to '%s'...\n" % self.outputfn)
             if self.opt.output_file_format == "csv":
                 csv_format = {'dialect': 'excel', 'lineterminator': '\n'}
                 if self.opt.csv_delimiter == 'tab':
                     csv_format['delimiter'] = '\t'
-                f = unicode_csv.writer(file(self.outputfn, "w"),
+                f = unicode_csv.Writer(file(self.outputfn, "w"),
                                        **self.opt.csv_format)
             elif self.opt.output_file_format == 'excel':
                 import xls
-                f = xls.writer(self.outputfn)
+                f = xls.Writer(self.outputfn)
             fwrite("Table 1. Profile-centric data")
             fwrite("Source image:", self.src_img)
             fwrite("Profile ID:", self.ID)
@@ -759,12 +761,12 @@ class ProfileData:
         sys.stdout.write("Done.\n")
         return 1
 
+# end of class Profile
 
-# end of class Profile        
 
 class OptionData:
     def __init__(self):
-        self.infileList = []
+        self.input_file_list = []
         self.spatial_resolution = 25
         self.shell_width = 0  # Skip points farther than this from profile
         self.outputs = {'profile summary': True, 'point summary': True,
@@ -794,9 +796,16 @@ class OptionData:
                                      'simulated - simulated': False}
         self.interpoint_shortest_dist = True
         self.interpoint_lateral_dist = False
+        self.stop_requested = False
 
-
+    def reset(self):
+        """ Resets all options to default, and removes those that are not
+            set in __init__().
+        """
+        self.__dict__ = {}
+        self.__init__()
 # end of class OptionData
+
 
 class ProfileError(exceptions.Exception):
     def __init__(self, profile, msg):

@@ -7,7 +7,8 @@ import csv
 import codecs
 import cStringIO
 
-class writer(object):
+
+class Writer(object):
     """
     A CSV writer which will write rows to CSV file "f",
     which is encoded in the given encoding.

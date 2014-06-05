@@ -503,6 +503,7 @@ class SegmentedPath(list):
     def is_simple_polygon(self):
         """ Makes sure that the closed path self is a simple polygon,
             ie does not intersect with itself.
+
             Uses the naive algorithm of checking every segment against
             every other segment.
         """
@@ -528,7 +529,7 @@ class SegmentedPath(list):
         return True
 
     def overlaps_polygon(self, path):
-        """ Determines whether polygon self and polygon path overlap
+        """ Determines whether polygon self and polygon path overlap.
         """
         if self.is_within_polygon(path) or path.is_within_polygon(self):
             return True

@@ -3,9 +3,10 @@
 import wx
 import frame
 
+
 class App(wx.App):
     def OnInit(self):
-        self.main = frame.wxFrame(None)
+        self.main = frame.Frame(None)
         self.main.Show(True)
         self.SetTopWindow(self.main)
         return True

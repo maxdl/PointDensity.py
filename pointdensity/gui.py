@@ -366,6 +366,8 @@ class MainFrame ( wx.Frame ):
 		
 		self.LogTextCtrl = wx.TextCtrl( self.LogPanel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,-1 ), wx.HSCROLL|wx.TE_MULTILINE )
 		self.LogTextCtrl.SetMaxLength( 0 ) 
+		self.LogTextCtrl.SetFont( wx.Font( 8, 70, 90, 90, False, wx.EmptyString ) )
+		
 		LogSizer.Add( self.LogTextCtrl, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
