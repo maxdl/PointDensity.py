@@ -3,10 +3,10 @@
 import os.path
 import sys
 
+version = "1.0"
+date = ("June", "12", "2014")
 title = "PointDensity"
 author = "Max Larsson"
-version = "1.0"
-date = ("May", "14", "2014")
 email = "max.larsson@liu.se"
 homepage = "www.hu.liu.se/forskning/larsson-max/software"
 if hasattr(sys, 'frozen'):
@@ -17,4 +17,4 @@ if hasattr(sys, 'frozen'):
 else:
     path = __file__
 app_path = os.path.dirname(path)
-icon = os.path.join(app_path, "../pd.ico")
+icon = os.path.join(app_path, "pd.ico")

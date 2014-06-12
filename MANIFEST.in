@@ -1,2 +1,5 @@
-include README.md
-include pd.ico
+include README.rst
+include LICENSE
+include ez_setup.py
+include pointdensity *.py *.pyw
+include pointdensity/pd.ico

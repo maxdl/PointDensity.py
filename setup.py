@@ -1,32 +1,28 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+from ez_setup import use_setuptools
+use_setuptools()
 
 from setuptools import setup, find_packages
 from os.path import join, dirname
+from pointdensity.version import version as __version__
 
-PACKAGE = "pointdensity"
-NAME = "PointDensity"
-DESCRIPTION = "Tool for analysis of immunogold labelling"
-AUTHOR = "Max Larsson"
-AUTHOR_EMAIL = "max.larsson@liu.se"
-LICENSE="MIT"
-URL = "http://www.hu.liu.se/forskning/larsson-max/software"
-VERSION = __import__(PACKAGE).__version__
-REQUIRES=['pyexcelerator']
 
 setup(
-    name=NAME,
-    version=__import__(PACKAGE).__version__,
-    description=DESCRIPTION,
-    long_description=open(join(dirname(__file__), "README.md")).read(),
-    author=AUTHOR,
-    author_email=AUTHOR_EMAIL,
-    license=LICENSE,
-    url=URL,
+    name="PointDensity.py",
+    version=__version__,
+    description="Tool for analysis of immunogold labelling",
+    long_description=open(join(dirname(__file__), "README.rst")).read(),
+    author="Max Larsson",
+    author_email="max.larsson@liu.se",
+    license="MIT",
+    url="http://www.hu.liu.se/forskning/larsson-max/software",
     packages=find_packages(),
     entry_points={
     'console_scripts':
         ['PointDensity = pointdensity.PointDensity:main']
     },
-    install_requires=REQUIRES
+    data_files=[('pointdensity', ['pointdensity/pd.ico'])],
+    install_requires=['pyexcelerator']
 )
