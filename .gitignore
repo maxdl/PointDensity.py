@@ -87,3 +87,4 @@ docs/_build/
 hs_err_pid*
 
 setuptools-4.0.1.zip
+make_release.py
