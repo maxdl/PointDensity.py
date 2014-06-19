@@ -121,7 +121,7 @@ class Frame(gui.MainFrame):
         if self.InputFileListCtrl.GetItemCount() == 0:
             self.show_warning("No files to process.")
             return
-        self.set_options_from_ui()
+        self.get_options_from_ui()
         if not self.set_log():
             return
         self.StatusBar.SetStatusText("Processing...")
@@ -260,7 +260,7 @@ class Frame(gui.MainFrame):
                 optstr = '.'.join([option, key.replace(' ', '_')])
                 config.set('Options', optstr, str(val))
 
-        self.set_options_from_ui()
+        self.get_options_from_ui()
         config = ConfigParser.ConfigParser()
         try:
             config.read(self.configfn)
@@ -442,7 +442,7 @@ class Frame(gui.MainFrame):
         self.OtherSuffixTextCtrl.Enable(self.OtherSuffixCheckBox.GetValue())
         self.LogFilePickerCtrl.SetPath(version.title + '.log')
  
-    def set_options_from_ui(self):
+    def get_options_from_ui(self):
         self.opt.input_file_list = []
         for n in range(0, self.InputFileListCtrl.GetItemCount()):
             self.opt.input_file_list.append(os.path.join(
@@ -618,7 +618,7 @@ class ProcessThread(threading.Thread):
     # noinspection PyBroadException
     def run(self):
         try:
-            self.exitcode = main.main_proc(self, self.opt)
+            self.exitcode = main.main_proc(self)
         except:  # yes, I do want to catch everything
             exc_str = "".join(traceback.format_exception(sys.exc_type,
                                                          sys.exc_value,
