@@ -417,17 +417,17 @@ class ProfileData:
         for c in clusterli:
             if self.opt.stop_requested:
                 return
-            c.nearestCluster = ClusterData()
+            c.nearest_cluster = ClusterData()
             if len(clusterli) == 1:
-                c.distToNearestCluster = -1
+                c.dist_to_nearest_cluster = -1
                 return
-            c.distToNearestCluster = sys.maxint
+            c.dist_to_nearest_cluster = sys.maxint
             for c2 in clusterli:
                 if c2 != c:
                     d = c.lateral_dist_to_cluster(c2, self.path)
-                    if d < c.distToNearestCluster:
-                        c.distToNearestCluster = d
-                        c.nearestCluster = c2
+                    if d < c.dist_to_nearest_cluster:
+                        c.dist_to_nearest_cluster = d
+                        c.nearest_cluster = c2
 
     def determine_clusters(self, pointli):
         """ Partition pointli into clusters; each cluster contains all points
