@@ -693,9 +693,9 @@ class AboutDialog(gui.AboutDialog):
                                                      wx.BITMAP_TYPE_ICO)))
         self.VersionLabel.SetLabel("Version %s" % version.version)
         self.LastModLabel.SetLabel("Last modified %s %s, %s." % version.date)
-        self.CopyrightLabel.SetLabel("Copyright %s %s." % (version.date[2],
-                                                           version.author))
-        self.LicenseLabel.SetLabel("Released under the terms of the GPLv3"
+        self.CopyrightLabel.SetLabel("Copyright 2001-%s %s." % (version.date[2],
+                                                                version.author))
+        self.LicenseLabel.SetLabel("Released under the terms of the MIT"
                                    " license.")
         self.EmailHyperlink.SetLabel("%s" % version.email)
         self.EmailHyperlink.SetURL("mailto://%s" % version.email)
