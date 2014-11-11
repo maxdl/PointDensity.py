@@ -21,7 +21,9 @@ setup(
     packages=find_packages(),
     entry_points={
     'console_scripts':
-        ['PointDensity = pointdensity.PointDensity:main']
+        ['PointDensity = pointdensity.PointDensity:main'],
+    'gui_scripts':
+        ['PointDensity = pointdensity.PointDensity:main']        
     },
     data_files=[('pointdensity', ['pointdensity/pd.ico'])],
     install_requires=['pyexcelerator']
