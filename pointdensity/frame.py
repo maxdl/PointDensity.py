@@ -103,8 +103,18 @@ class Frame(gui.MainFrame):
         self.MonteCarloRunsSpinCtrl.Enable(self.MonteCarloCheckBox.GetValue())
         self.SimulationWindowChoice.Enable(self.MonteCarloCheckBox.GetValue())
         self.SimulationWindowLabel.Enable(self.MonteCarloCheckBox.GetValue())
-        self.StrictLocCheckBox.Enable(self.MonteCarloCheckBox.GetValue())
-    
+        if (self.MonteCarloCheckBox.GetValue() and
+           self.SimulationWindowChoice.GetStringSelection() == 'Profile'):
+            self.StrictLocCheckBox.Enable(True)
+        else:
+            self.StrictLocCheckBox.Enable(False)
+
+    def OnSimulationWindowChoice(self, event):
+        if self.SimulationWindowChoice.GetStringSelection() == 'Profile':
+            self.StrictLocCheckBox.Enable(True)
+        else:
+            self.StrictLocCheckBox.Enable(False)
+
     def OnOtherSuffixCheckBox(self, event):
         self.OtherSuffixTextCtrl.Enable(self.OtherSuffixCheckBox.GetValue())
         
@@ -329,7 +339,7 @@ class Frame(gui.MainFrame):
             defaultdict = getattr(defaults, opt)
             for key, val in optdict.items():
                 optstr = '.'.join([opt, key.replace(" ", "_")])
-                if not key in getattr(defaults, opt).keys():
+                if key not in getattr(defaults, opt).keys():
                     self.show_warning("Invalid option '%s' in configuration "
                                       "file '%s'." % (optstr, self.configfn))
                     del optdict[key]
@@ -482,7 +492,7 @@ class Frame(gui.MainFrame):
                 self.opt.interpoint_relations[key] = True
             else:
                 self.opt.interpoint_relations[key] = False
-        if not True in self.opt.interpoint_relations.values():
+        if True not in self.opt.interpoint_relations.values():
             self.opt.determine_interpoint_dists = False
         self.opt.interpoint_dist_mode = \
             self.InterpointModeChoice.GetStringSelection().lower()

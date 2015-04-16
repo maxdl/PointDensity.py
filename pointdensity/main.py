@@ -33,8 +33,8 @@ def save_output(profileli, opt):
     def write_session_summary():
         with file_io.FileWriter("session.summary", opt) as f:
             f.writerow(["%s version:" % version.title,
-                       "%s (Last modified %s %s, %s)"
-                       % ((version.version,) + version.date)])
+                        "%s (Last modified %s %s, %s)"
+                        % ((version.version,) + version.date)])
             f.writerow(["Number of evaluated profiles:", len(eval_proli)])
             if err_fli:
                 f.writerow(["Number of non-evaluated profiles:",
@@ -123,12 +123,6 @@ def save_output(profileli, opt):
             else:
                 pli = "randomli"
                 pstr = "point"
-        elif ptype == "grid":
-            if not opt.use_grid:
-                return
-            else:
-                pli = "gridli"
-                pstr = "point"
         else:
             return
         with file_io.FileWriter("%s.summary" % ptype, opt) as f:
@@ -199,8 +193,6 @@ def save_output(profileli, opt):
         prefixli = []
         for key, val in ip_rels.items():
             prefix = key[0] + key[key.index("- ") + 2] + "_"
-            #if prefix[0] == prefix[1]:
-            #    prefix = prefix.replace(prefix[0], "", 1)
             prefixli.append(prefix)
         if opt.interpoint_shortest_dist and opt.interpoint_lateral_dist:
             headerli.extend(headerli)
@@ -214,7 +206,7 @@ def save_output(profileli, opt):
             topheaderli.append("Lateral distances along postsynaptic element "
                                "membrane")
         table.extend([topheaderli, headerli])
-        cols = [[] for c in prefixli]
+        cols = [[] for _ in prefixli]
         for pro in eval_proli:
             for n, li in enumerate([pro.__dict__[prefix + "distli"]
                                     for prefix in prefixli]):
@@ -262,8 +254,8 @@ def save_output(profileli, opt):
             for pro in eval_proli:
                 table.extend(map(m_li,
                                  *[p for li in pro.mcli
-                                 for p in li[ip_type]
-                                 ["%sdist" % short_dist_type]]))
+                                   for p in li[ip_type]
+                                   ["%sdist" % short_dist_type]]))
             with file_io.FileWriter("%s.interpoint.%s.distance.summary"
                                     % (ip_type.replace(" ", ""),
                                        dist_type), opt) as f:
@@ -291,7 +283,7 @@ def save_output(profileli, opt):
         with file_io.FileWriter("simulated.cluster.summary", opt) as f:
             f.writerows(table)
 
-    sys.stdout.write("\nSaving summaries...\n")
+    sys.stdout.write("\nSaving summaries to %s:\n" % opt.output_dir)
     opt.save_result = {'any_saved': False, 'any_err': False}
     eval_proli = [profile for profile in profileli if not profile.errflag]
     clean_fli = [profile.inputfn for profile in profileli
@@ -303,7 +295,6 @@ def save_output(profileli, opt):
     write_profile_summary()
     write_point_summary("point")
     write_point_summary("random")
-    write_point_summary("grid")
     write_interpoint_summaries()
     write_cluster_summary()
     write_mc_dist_to_border_summary()
@@ -324,8 +315,6 @@ def reset_options(opt):
     """
     if hasattr(opt, "metric_unit"):
         delattr(opt, "metric_unit")
-    if hasattr(opt, "use_grid"):
-        delattr(opt, "use_grid")
     if hasattr(opt, "use_random"):
         delattr(opt, "use_random")
 
@@ -355,8 +344,9 @@ def show_options(opt):
                          % opt.monte_carlo_runs)
         sys.stdout.write("Monte Carlo simulation window: %s\n"
                          % opt.monte_carlo_simulation_window)
-        sys.stdout.write("Strict localization in simulation window: %s\n"
-                         % sc.yes_or_no(opt.monte_carlo_strict_location))
+        if opt.monte_carlo_simulation_window == "profile":
+            sys.stdout.write("Strict localization in simulation window: %s\n"
+                             % sc.yes_or_no(opt.monte_carlo_strict_location))
     sys.stdout.write("Clusters determined: %s\n" %
                      sc.yes_or_no(opt.determine_clusters))
     if opt.determine_clusters:

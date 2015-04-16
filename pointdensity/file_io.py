@@ -34,10 +34,10 @@ class FileWriter():
             if tb is not None:
                 raise IOError
             self.f.close()
-            sys.stdout.write("Saved '%s'.\n" % self.fn)
+            sys.stdout.write("Saved %s.\n" % os.path.basename(self.fn))
             self.opt.save_result['any_saved'] = True
         except IOError:
-            sys.stdout.write("Error: Unable to save to file '%s'\n" % self.fn)
+            sys.stdout.write("Error: Unable to save to file %s\n" % self.fn)
             self.opt.save_result['any_err'] = True
 
 

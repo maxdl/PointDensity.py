@@ -1,3 +1,17 @@
+2015-04-16:
+- Bug fixes.
+2015-01-14:
+- Fixed Monte Carlo simulations that had been broken in a previous version.
+- Monte Carlo simulation windows should now work as expected.
+- Removed the strict localization option when using simulation window "profile +
+  shell".
+- Most functions in class ProfileData are now semiprivate.
+- Further code cleanup.
+- Various other small changes and bug fixes.
+2014-11-11:
+- A rather comprehensive code cleanup.
+- Various other small changes and bug fixes.
+- License changed to the MIT license.
 2014-05-14:
 - In the output files for random and grid points, output values were for the
   'real' point list rather than for the random or grid point lists. This has now
