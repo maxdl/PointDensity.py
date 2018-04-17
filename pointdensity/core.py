@@ -519,7 +519,7 @@ class ProfileData:
                                        "PIXELWIDTH is not a valid number")
             elif s.upper() == "PROFILE_BORDER":
                 self.path = ProfileBorderData(self._get_coords(li, "path"))
-            elif s.upper() == "PROFILE_HOLE":
+            elif s.upper() in ("PROFILE_HOLE", "HOLE"):
                 self.path.add_hole(geometry.SegmentedPath(
                     self._get_coords(li, "hole")))
             elif s.upper() in ("POINTS", "PARTICLES"):
