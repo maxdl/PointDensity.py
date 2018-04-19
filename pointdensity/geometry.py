@@ -1,6 +1,6 @@
+import functools
 import math
 import sys
-import types
 
 
 class Point(object):
@@ -17,7 +17,7 @@ class Point(object):
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ')'
 
-    def __nonzero__(self):
+    def __bool__(self):
         """ True if both x and y are defined """
         if self.x is not None and self.y is not None:
             return True
@@ -330,11 +330,8 @@ class Point(object):
         # (posloc). Even (odd) number => the particle and negloc
         # (posloc) are on the same side of the path; odd number =>
         # different side.
-        if (negloc is not None and
-                self.segment_crossing_number(m, negloc) % 2 == 0):
-            mindist = -mindist
-        elif (posloc is not None and
-              self.segment_crossing_number(m, posloc) % 2 != 0):
+        if ((negloc and self.segment_crossing_number(m, negloc) % 2 == 0) or
+                (posloc and self.segment_crossing_number(m, posloc) % 2 != 0)):
             mindist = -mindist
         return mindist
 
@@ -360,7 +357,7 @@ class Point(object):
 class Vec(Point):
     def __rmul__(self, l):
         """ Multiplication with scalar """
-        if isinstance(l, types.IntType) or isinstance(l, types.FloatType):
+        if isinstance(l, int) or isinstance(l, float):
             return Vec(l * self.x, l * self.y)
         else:
             raise TypeError('First operand not a scalar')
@@ -718,7 +715,7 @@ def segments_intersect_or_coincide(a, b, c, d):
     return False
 
 
-def convex_hull(pointli):
+def convex_hull_graham(pointli):
     """Determine the convex hull of the points in pointli.
 
     Uses Graham's algorithm after O'Rourke (1998).
@@ -772,7 +769,7 @@ def convex_hull(pointli):
     # sort points with respect to angle between the vector p0->p and the x axis
     for p in pointli:
         p.delete = False
-    sortedli = sorted([p for p in pointli if p != p0], comp_func)
+    sortedli = sorted([p for p in pointli if p != p0], key=functools.cmp_to_key(comp_func))
     # delete points marked for deletion (i.e., non-extreme points on the hull)
     for p in sortedli[:]:  # iterate over a copy of sortedli because we
         if p.delete:  # will delete marked points in sortedli
@@ -818,3 +815,23 @@ def convex_hull_andrew(pointli):
     return upper, lower
 
 
+def convex_hull_andrew_merged(pointli):
+    """Determine the convex hull of the points in pointli.
+
+    Merges the upper and lower hulls yielded by convex_hull_andrew(),
+    and returns the resulting SegmentedPath.
+    """
+    upper, lower = convex_hull_andrew(pointli)
+    lower.reverse()
+    merged = SegmentedPath(upper + lower[1:-1])
+    return merged
+
+
+def convex_hull(pointli):
+    """Determine the convex hull of the points in pointli.
+
+    Uses Andrew's algorithm.
+    
+    Returns a SegmentedPath.
+    """
+    return convex_hull_andrew_merged(pointli)
