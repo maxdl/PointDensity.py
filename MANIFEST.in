@@ -1,6 +1,8 @@
 include README.rst
 include LICENSE
 include ez_setup.py
+include PointDensity.py
+include PointDensity.pyw
 include pointdensity/*.py 
 include pointdensity/*.pyw
 include pointdensity/pd.ico

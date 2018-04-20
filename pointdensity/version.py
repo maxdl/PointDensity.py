@@ -3,8 +3,8 @@
 import os.path
 import sys
 
-version = "1.1.1"
-date = ("April", "20", "2015")
+version = "1.2.0"
+date = ("April", "20", "2018")
 title = "PointDensity"
 author = "Max Larsson"
 email = "max.larsson@liu.se"

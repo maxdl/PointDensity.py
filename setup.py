@@ -17,14 +17,14 @@ setup(
     author="Max Larsson",
     author_email="max.larsson@liu.se",
     license="MIT",
-    url="http://www.hu.liu.se/forskning/larsson-max/software",
+    url="http://www.liu.se/medfak/forskning/larsson-max/software",
     packages=find_packages(),
     entry_points={
     'console_scripts':
-        ['PointDensity = pointdensity.PointDensity:main'],
+        ['PointDensity = PointDensity:main'],
     'gui_scripts':
-        ['PointDensity = pointdensity.PointDensity:main']        
+        ['PointDensity = PointDensity:main']        
     },
     data_files=[('pointdensity', ['pointdensity/pd.ico'])],
-    install_requires=['pyexcelerator']
+    install_requires=['openpyxl']
 )
