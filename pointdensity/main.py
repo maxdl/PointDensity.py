@@ -39,21 +39,18 @@ def save_output(profileli, opt):
             return
         with file_io.FileWriter("session.summary", opt) as f:
             f.writerow(["%s version:" % version.title,
-                        "%s (Last modified %s %s, %s)"
-                        % ((version.version,) + version.date)])
+                        "%s (Last modified %s %s, %s)" % ((version.version,) + version.date)])
             f.writerow(["Number of evaluated profiles:", len(eval_proli)])
             if err_fli:
                 f.writerow(["Number of non-evaluated profiles:", len(err_fli)])
             f.writerow(["Metric unit:", eval_proli[0].metric_unit])
             f.writerow(["Spatial resolution:", opt.spatial_resolution,
                         eval_proli[0].metric_unit])
-            f.writerow(["Shell width:", opt.shell_width,
-                        eval_proli[0].metric_unit])
+            f.writerow(["Shell width:", opt.shell_width, eval_proli[0].metric_unit])
             f.writerow(["Interpoint distances calculated:",
                         stringconv.yes_or_no(opt.determine_interpoint_dists)])
             if opt.determine_interpoint_dists:
-                f.writerow(["Interpoint distance mode:",
-                            opt.interpoint_dist_mode])
+                f.writerow(["Interpoint distance mode:", opt.interpoint_dist_mode])
                 f.writerow(["Shortest interpoint distances:",
                             stringconv.yes_or_no(opt.interpoint_shortest_dist)])
                 f.writerow(["Lateral interpoint distances:",
@@ -61,14 +58,11 @@ def save_output(profileli, opt):
             f.writerow(["Monte Carlo simulations performed:",
                         stringconv.yes_or_no(opt.run_monte_carlo)])
             if opt.run_monte_carlo:
-                f.writerow(["Number of Monte Carlo runs:",
-                            opt.monte_carlo_runs])
-                f.writerow(["Monte Carlo simulation window:",
-                            opt.monte_carlo_simulation_window])
+                f.writerow(["Number of Monte Carlo runs:", opt.monte_carlo_runs])
+                f.writerow(["Monte Carlo simulation window:", opt.monte_carlo_simulation_window])
                 f.writerow(["Strict localization in simulation window:",
                             stringconv.yes_or_no(opt.monte_carlo_strict_location)])
-            f.writerow(["Clusters determined:",
-                        stringconv.yes_or_no(opt.determine_clusters)])
+            f.writerow(["Clusters determined:", stringconv.yes_or_no(opt.determine_clusters)])
             if opt.determine_clusters:
                 f.writerow(["Within-cluster distance:",
                             opt.within_cluster_dist,
@@ -92,16 +86,18 @@ def save_output(profileli, opt):
         with file_io.FileWriter("profile.summary", opt) as f:
             f.writerow(["Perimeter",
                         "Area",
+                        "Feret diameter",
                         "Number of points (total)",
                         "Number of points within profile",
                         "Number of points associated with profile",
                         "Number of points associated with border",
-                        "Area density of points within profile",
+                        "Area density of points within profile * 1e6",
                         "Profile ID",
                         "Input file",
                         "Comment"])
-            f.writerows([[m(pro.path.perimeter(), pro.pixelwidth),
-                          m2(pro.path.area(), pro.pixelwidth),
+            f.writerows([[m(pro.perimeter, pro.pixelwidth),
+                          m2(pro.area, pro.pixelwidth),
+                          m(pro.feret, pro.pixelwidth),
                           len(pro.pli),
                           len([p for p in pro.pli
                                if p.is_within_profile]),
@@ -308,6 +304,7 @@ def reset_options(opt):
         if hasattr(opt, optstr):
             delattr(opt, optstr)
 
+
 def show_options(opt):
     sys.stdout.write("{} version: {} (Last modified {} {}, {})\n".format(
                      version.title, version.version, *version.date))
@@ -361,6 +358,7 @@ def main_proc(parent):
     """ Process profile data files
     """
     opt = parent.opt
+    opt.process_queue = parent.process_queue
     if not opt.input_file_list:
         sys.stdout.write("No input files.\n")
         return 0

@@ -191,6 +191,7 @@ class ProfileBorderData(geometry.SegmentedPath):
         geometry.SegmentedPath.__init__(self, pointlist)
         self.profile = profile
 
+
 class PointList(list):
     def __init__(self, pointli, ptype, profile):
         super().__init__()
@@ -249,31 +250,19 @@ class ProfileData:
         self.metric_unit = ''
         self.posloc = geometry.Point()
         self.negloc = geometry.Point()
+        self.perimeter = None
+        self.feret = None
         self.warnflag = False
         self.errflag = False
 
     def process(self, opt):
         """ Parse profile data from a file and determine distances
         """
-
-        def compute_stuff(pli):
-            for pt in pli:
-                pt.determine_stuff()
-
         try:
             self.__parse()
             self.__check_paths()
             sys.stdout.write("Determining distances etc...\n")
-            compute_stuff(self.pli)
-            self.pli = [p for p in self.pli if not p.discard]
-            compute_stuff(self.randomli)
-            self.randomli = [p for p in self.randomli if not p.discard]
-            for ptype in ('particle', 'random'):
-                if ptype == 'random' and not opt.use_random:
-                    continue
-                ptypestr = 'particles' if ptype == 'particle' else ptype + ' points'
-                sys.stdout.write("  Number of %s discarded: %d\n"
-                                 % (ptypestr, self.n_discarded[ptype]))
+            self.__compute_stuff()
             if self.opt.determine_interpoint_dists:
                 sys.stdout.write("Determining interparticle distances...\n")
                 self.__determine_interdistlis()
@@ -290,6 +279,7 @@ class ProfileData:
             sys.stdout.write("Error: %s\n" % err.msg)
             self.errflag = True
 
+    @lazy_property
     def area(self):
         """Determine area of profile, excluding holes"""
         tot_hole_area = sum([h.area() for h in self.holeli])
@@ -300,6 +290,23 @@ class ProfileData:
         if not p:
             return None
         return p.is_within_profile(self)
+
+    def __compute_stuff(self):
+        __ = self.area  # Force computation here
+        self.perimeter = self.path.perimeter()
+        self.feret = self.path.feret_diameter()
+        for p in self.pli:
+            p.determine_stuff()
+        self.pli = [p for p in self.pli if not p.discard]
+        for p in self.randomli:
+            p.determine_stuff()
+        self.randomli = [p for p in self.randomli if not p.discard]
+        for ptype in ('particle', 'random'):
+            if ptype == 'random' and not self.opt.use_random:
+                continue
+            ptypestr = 'particles' if ptype == 'particle' else ptype + ' points'
+            sys.stdout.write("  Number of %s discarded: %d\n"
+                             % (ptypestr, self.n_discarded[ptype]))
 
     def __determine_interdistlis(self):
         if True not in [val for key, val in self.opt.interpoint_relations.items()
@@ -433,7 +440,7 @@ class ProfileData:
                     mcli[n]['particle - simulated']['latdist'].append(distlis[1])
         if self.opt.determine_clusters:
             for n, li in enumerate(mcli):
-                # dot_progress(n)
+                dot_progress(n)
                 mcli[n]['clusterli'] = self.__determine_clusters(li['pli'])
                 self.__process_clusters(mcli[n]['clusterli'])
         self.mcli = mcli
