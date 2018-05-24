@@ -214,8 +214,7 @@ def save_output(profileli, opt):
 
         if not opt.run_monte_carlo:
             return
-        table = [["Run %d" % (n + 1)
-                  for n in range(0, opt.monte_carlo_runs)]]
+        table = [["Run %d" % (n + 1) for n in range(0, opt.monte_carlo_runs)]]
         for pro in eval_proli:
             table.extend(map(m_li, *[[p.dist_to_path for p in li['pli']]
                                      for li in pro.mcli]))
@@ -242,8 +241,7 @@ def save_output(profileli, opt):
             for pro in eval_proli:
                 table.extend(map(m_li,
                                  *[p for li in pro.mcli
-                                   for p in li[ip_type]
-                                   ["%sdist" % short_dist_type]]))
+                                   for p in li[ip_type]["%sdist" % short_dist_type]]))
             with file_io.FileWriter("%s.interpoint.%s.distance.summary"
                                     % (ip_type.replace(" ", ""), dist_type), opt) as f:
                 f.writerows(table)
@@ -325,8 +323,7 @@ def show_options(opt):
                      % stringconv.yes_or_no(opt.run_monte_carlo))
     if opt.run_monte_carlo:
         sys.stdout.write("Number of Monte Carlo runs: %d\n" % opt.monte_carlo_runs)
-        sys.stdout.write("Monte Carlo simulation window: %s\n"
-                         % opt.monte_carlo_simulation_window)
+        sys.stdout.write("Monte Carlo simulation window: %s\n" % opt.monte_carlo_simulation_window)
         if opt.monte_carlo_simulation_window == "profile":
             sys.stdout.write("Strict localization in simulation window: %s\n"
                              % stringconv.yes_or_no(opt.monte_carlo_strict_location))
@@ -365,7 +362,6 @@ def main_proc(parent):
     i, n = 0, 0
     profileli = []
     sys.stdout.write("--- Session started %s local time ---\n" % time.ctime())
-    # Remove duplicate filenames
     for f in opt.input_file_list:
         if opt.input_file_list.count(f) > 1:
             sys.stdout.write("Duplicate input filename %s:\n   => removing first occurrence in "
@@ -385,7 +381,7 @@ def main_proc(parent):
         profileli.append(ProfileData(inputfn, opt))
         profileli[-1].process(opt)
         if opt.stop_requested:
-            sys.stdout.write("\n--- Session aborted by user %s local time ---\n"  % time.ctime())
+            sys.stdout.write("\n--- Session aborted by user %s local time ---\n" % time.ctime())
             return 3
         if not profileli[-1].errflag:
             n += 1

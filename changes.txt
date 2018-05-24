@@ -1,3 +1,13 @@
+2018-05-24:
+- Fixed a fatal bug introduced by migration to Python 3 that caused failure
+  to process files if a log file was not already present.
+- Fixed the "_csv_writer object has no 'close' attribute" bug, so csv files
+  can now be saved again.
+- file_io.read_file() again had started to trigger errors when encountering
+  non-ASCII characters, probably since after the migration to Python 3. This
+  has now been fixed, such that coordinate files are opened using
+  OS/locale-specific encoding, with the 'surrogateescape' option to tolerate
+  some decoding errors.
 2018-04-20:
 - Added Feret diameter to profile output.
 - Minor bug fixes and code cleanup.
