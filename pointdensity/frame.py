@@ -611,11 +611,11 @@ class LogQueue:
             self.errstr = "* Error: could not write to log file: %s\n" % self.fn
             if mode == 'Append':
                 try:
-                    f = open(self.fn, "a", 0)
+                    f = open(self.fn, "a")
                     f.close()
                 except IOError:
                     try:
-                        f = open(self.fn, "w", 0)
+                        f = open(self.fn, "w")
                         f.close()
                     except IOError:
                         sys.stderr.write(self.errstr)

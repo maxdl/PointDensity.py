@@ -136,7 +136,7 @@ class Point(geometry.Point):
         else:
             return False
 
-    @property
+    @lazy_property
     def is_associated_with_profile(self):
         """Determine whether self is within the profile or
         associated with the profile border"""
@@ -261,7 +261,7 @@ class ProfileData:
         try:
             self.__parse()
             self.__check_paths()
-            sys.stdout.write("Determining distances etc...\n")
+            sys.stdout.write("Processing profile...\n")
             self.__compute_stuff()
             if self.opt.determine_interpoint_dists:
                 sys.stdout.write("Determining interparticle distances...\n")
@@ -366,19 +366,21 @@ class ProfileData:
 
     def __run_monte_carlo(self):
 
-        def is_valid(rand_p):
-            if rand_p in mcli[n]["pli"]:
+        # TODO: See if we can simplify is_valid()!
+        def is_valid(p_candidate):
+            if p_candidate in mcli[n]["pli"]:
                 return False
-            if rand_p.is_within_profile:
+            if p_candidate.is_within_profile:
                 return True
             # The if clause below is not necessary but should speed up
             # the code a little bit
             elif (self.opt.monte_carlo_simulation_window == "profile" and
                   self.opt.monte_carlo_strict_location):
                     return False
-            if rand_p.is_within_hole:
-                return False
-            d = rand_p.perpend_dist_closed_path(self.path)
+            # Not necessary as Point.is_within_profile tests for holes
+            # if p_candidate.is_within_hole:
+            #     return False
+            d = p_candidate.perpend_dist_closed_path(self.path)
             if d is None:
                 return False
             # border is set in the outer function according to
@@ -734,9 +736,6 @@ class OptionData:
                         'particle summary': True,
                         'random summary': True,
                         'session summary': True}
-        self.gridSummary = True
-        self.interparticleSummary = False
-        self.individualProfileOutput = False
         self.output_file_format = 'excel'
         self.output_filename_ext = '.xlsx'
         self.input_filename_ext = '.pd'
@@ -748,7 +747,6 @@ class OptionData:
         self.action_if_output_file_exists = 'overwrite'
         self.output_dir = ''
         self.use_random = False
-        self.stop_requested = False
         self.determine_clusters = False
         self.within_cluster_dist = 50
         self.run_monte_carlo = False
