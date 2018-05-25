@@ -1,3 +1,6 @@
+2018-05-25:
+- Fixed bug introduced in version 1.1.0 that caused the calculation of particle area
+  density in the profile summary to not exclude holes from the total area.
 2018-05-24:
 - Fixed a fatal bug introduced by migration to Python 3 that caused failure
   to process files if a log file was not already present.
