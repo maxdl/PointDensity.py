@@ -108,7 +108,7 @@ def save_output(profileli, opt):
                                if p.is_associated_with_path]),
                           1e6*(len([p for p in pro.pli
                                     if p.is_within_profile])
-                               / m2(pro.path.area(), pro.pixelwidth)),
+                               / m2(pro.area, pro.pixelwidth)),
                           pro.id,
                           os.path.basename(pro.inputfn),
                           pro.comment] for pro in eval_proli])
