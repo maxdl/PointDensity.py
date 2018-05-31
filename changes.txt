@@ -1,3 +1,7 @@
+2018-05-30:
+- Fixed bug present since migration to Python 3 (due to altered behaviour of map())
+  that truncated interpoint distance columns in interpoint summary to the length of
+  the column with fewest rows (only of concern when random points were used).
 2018-05-25:
 - Fixed bug introduced in version 1.2.0 that caused the calculation of particle area
   density in the profile summary to not exclude holes from the total area.
