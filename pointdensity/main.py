@@ -201,11 +201,16 @@ def save_output(profileli, opt):
                 topheaderli.extend([""] * (len(ip_rels) - 1))
         if opt.interpoint_lateral_dist:
             topheaderli.append("Lateral distances along profile border")
+        topheaderli.append("Input file")
         table.extend([topheaderli, headerli])
-        cols = [[] for _ in prefixli]
+        cols = [[] for _ in range(len(prefixli) + 1)]  # len+1 to account for input file column
         for pro in eval_proli:
+            maxlength = 0   # find length of largest distli in profile
             for n, li in enumerate([pro.__dict__[prefix + "distli"] for prefix in prefixli]):
+                maxlength = max(maxlength, len(li))
                 cols[n].extend([m(e, pro.pixelwidth) for e in li])
+            for _ in range(maxlength):    # input file should be added to all rows
+                cols[-1].append(os.path.basename(pro.inputfn))
         # transpose cols and append to table
         table.extend(list(itertools.zip_longest(*cols, fillvalue="")))
         with file_io.FileWriter("interpoint.distances", opt) as f:
