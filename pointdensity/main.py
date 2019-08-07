@@ -188,9 +188,12 @@ def save_output(profileli, opt):
         for key, val in ip_rels.items():
             prefix = key[0] + key[key.index("- ") + 2] + "_"
             prefixli.append(prefix)
-        if opt.interpoint_shortest_dist and opt.interpoint_lateral_dist:
-            headerli.extend(headerli)
-            prefixli.extend([t + 'lat' for t in prefixli])
+        if opt.interpoint_lateral_dist:
+            if opt.interpoint_shortest_dist:
+                headerli.extend(headerli)
+                prefixli.extend([t + 'lat' for t in prefixli])
+            else:
+                prefixli = [t + 'lat' for t in prefixli]
         topheaderli = []
         if opt.interpoint_shortest_dist:
             topheaderli.append("Shortest distances")
