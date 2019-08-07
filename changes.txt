@@ -1,3 +1,8 @@
+2019-08-06:
+- Added column with input filenames in the interpoint distance output, so that
+  interpoint distances can be sorted with respect to profile.
+- Fixed bug that generated empty interpoint distance output when only lateral
+  interpoint distances (and not shortest interpoint distances) were selected.
 2018-05-31:
 - Fixed bug present since migration to Python 3 (due to altered behaviour of map())
   that truncated interpoint distance columns in interpoint summary to the length of
