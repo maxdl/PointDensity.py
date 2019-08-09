@@ -16,6 +16,6 @@ for more information.
 
 License
 -------
-Copyright 2001-2018 Max Larsson `(max.larsson@liu.se) <mailto:max.larsson@liu.se>`_
+Copyright 2001-2019 Max Larsson `(max.larsson@liu.se) <mailto:max.larsson@liu.se>`_
 
 PointDensity.py is released under the MIT license.
