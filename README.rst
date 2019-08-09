@@ -9,7 +9,7 @@ also possible to use the tool for other types of two-dimensional spatial point
 patterns.
 
 PointDensity.py is used in conjunction with its companion ImageJ plugin,
-PointDensity_.java.
+`PointDensity.IJ <https://github.com/maxdl/PointDensity.IJ>`_.
 
 Please see the `website <http://www.liu.se/medfak/forskning/larsson-max/software>`_
 for more information.
