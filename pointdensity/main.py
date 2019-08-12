@@ -36,8 +36,6 @@ def save_output(profileli, opt):
             return x
 
     def write_session_summary():
-        if not opt.outputs['session summary']:
-            return
         with file_io.FileWriter("session.summary", opt) as f:
             f.writerow(["%s version:" % version.title,
                         "%s (Last modified %s %s, %s)" % ((version.version,) + version.date)])
@@ -115,10 +113,10 @@ def save_output(profileli, opt):
                           pro.comment] for pro in eval_proli])
 
     def write_point_summary(ptype):
-        if ptype == 'particle' and opt.outputs['particle summary']:
+        if ptype == 'particle':
             pli = 'pli'
             pstr = 'particle'
-        elif ptype == 'random' and opt.outputs['particle summary'] and opt.use_random:
+        elif ptype == 'random' and opt.use_random:
             pli = 'randomli'
             pstr = 'point'
         else:

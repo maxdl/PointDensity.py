@@ -414,8 +414,6 @@ class Frame(gui.MainFrame):
         self.MonteCarloRunsSpinCtrl.Enable(self.MonteCarloCheckBox.GetValue())        
         self.SimulationWindowChoice.Enable(self.MonteCarloCheckBox.GetValue())
         self.SimulationWindowLabel.Enable(self.MonteCarloCheckBox.GetValue())
-        self.OutputCheckListBox.SetCheckedStrings([key.capitalize() for key in self.opt.outputs
-                                                   if self.opt.outputs[key]])
         if self.opt.output_file_format == 'excel':
             self.OutputFormatRadioBox.SetStringSelection('Excel')
         elif self.opt.csv_delimiter == 'comma':
@@ -438,11 +436,6 @@ class Frame(gui.MainFrame):
             self.opt.input_file_list.append(os.path.join(
                 self.InputFileListCtrl.GetItemText(n, 1),
                 self.InputFileListCtrl.GetItemText(n, 0)))
-        for key in self.opt.outputs:
-            if key.capitalize() in self.OutputCheckListBox.GetCheckedStrings():
-                self.opt.outputs[key] = True
-            else:
-                self.opt.outputs[key] = False
         if self.OutputFormatRadioBox.GetStringSelection() == 'Excel':
             self.opt.output_file_format = 'excel'
             self.opt.output_filename_ext = '.xlsx'

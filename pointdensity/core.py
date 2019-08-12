@@ -732,10 +732,6 @@ class OptionData:
         self.input_file_list = []
         self.spatial_resolution = 25
         self.shell_width = 200
-        self.outputs = {'profile summary': True,
-                        'particle summary': True,
-                        'random summary': True,
-                        'session summary': True}
         self.output_file_format = 'excel'
         self.output_filename_ext = '.xlsx'
         self.input_filename_ext = '.pd'
