@@ -277,6 +277,16 @@ class MainFrame ( wx.Frame ):
 		OutputOptionsSizer.SetFlexibleDirection( wx.BOTH )
 		OutputOptionsSizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
+		self.SaveCoordsCheckBox = wx.CheckBox( self.OutputOptionsTab, wx.ID_ANY, u"Save processed coordinates", wx.DefaultPosition, wx.DefaultSize, 0 )
+		OutputOptionsSizer.Add( self.SaveCoordsCheckBox, 0, wx.ALL, 5 )
+
+		BlankSizer = wx.FlexGridSizer( 0, 2, 0, 0 )
+		BlankSizer.SetFlexibleDirection( wx.BOTH )
+		BlankSizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
+
+		OutputOptionsSizer.Add( BlankSizer, 1, wx.EXPAND, 5 )
+
 		OutputFormatRadioBoxChoices = [ u"Excel", u"Comma-delimited text", u"Tab-delimited text" ]
 		self.OutputFormatRadioBox = wx.RadioBox( self.OutputOptionsTab, wx.ID_ANY, u"Output format", wx.DefaultPosition, wx.DefaultSize, OutputFormatRadioBoxChoices, 1, wx.RA_SPECIFY_COLS )
 		self.OutputFormatRadioBox.SetSelection( 0 )

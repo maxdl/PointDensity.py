@@ -268,6 +268,63 @@ def save_output(profileli, opt):
         with file_io.FileWriter("simulated.cluster.summary", opt) as f:
             f.writerows(table)
 
+    def write_coords():
+        if not opt.save_coords:
+            return
+        for pro in eval_proli:
+            table = []
+            table.append("# Profile coordinates including adjusted postsynaptic densities and "
+                         "Monte Carlo simulated points\n")
+            table.append("# %s version %s (%s %s, %s)\n" %
+                         (version.title, version.version,
+                          version.date[0], version.date[1], version.date[2]))
+            table.append("# Generated %s\n" % time.ctime())
+            table.append("INPUT_FILE %s\n" % pro.inputfn)
+            table.append("IMAGE %s\n" % pro.src_img)
+            table.append("PROFILE_ID %s\n" % pro.id)
+            table.append("COMMENT %s\n" % pro.comment)
+            table.append("PIXELWIDTH %s %s\n" %(pro.pixelwidth, pro.metric_unit))
+            table.append("PROFILE_BORDER\n")
+            for p in pro.path:
+                table.append("  %s, %s\n" % (p.x, p.y))
+            table.append("END\n")
+            for hole in pro.holeli:
+                table.append("HOLE\n")
+                for p in hole:
+                    table.append("  %s, %s\n" % (p.x, p.y))
+                table.append("END\n")
+            table.append("PARTICLES\n")
+            for p in pro.pli:
+                table.append("  %s, %s\n" % (p.x, p.y))
+            table.append("END\n")
+            table.append("RANDOM_POINTS\n")
+            for p in pro.randomli:
+                table.append("  %s, %s\n" % (p.x, p.y))
+            table.append("END\n")
+            for n, cluster in enumerate(pro.clusterli):
+                table.append("CLUSTER_CONVEX_HULL %d\n" % (n+1))
+                for p in cluster.convex_hull:
+                    table.append("  %s, %s\n" % (p.x, p.y))
+                table.append("END\n")
+            for n, mc in enumerate(pro.mcli):
+                table.append("MONTE_CARLO RUN %d\n" % (n+1))
+                for p in mc['pli']:
+                    table.append("  %s, %s\n" % (p.x, p.y))
+                table.append("END\n")
+            coords_dir = os.path.join(opt.output_dir, "coordinate_files")
+            if not os.path.isdir(coords_dir):
+                os.mkdir(coords_dir)
+            fn = os.path.join(coords_dir,
+                              os.path.basename(pro.inputfn).rstrip(opt.input_filename_ext) +
+                              ".coords%s" % opt.input_filename_ext)
+            try:
+                f = open(fn, "w")
+                f.writelines(table)
+                f.close()
+            except IOError:
+                sys.stderr.write("Could not write to output file %s" % fn)
+        sys.stdout.write("Saved processed coordinate files to folder '%s.'" % coords_dir)
+
     sys.stdout.write("\nSaving summaries to %s:\n" % opt.output_dir)
     opt.save_result = {'any_saved': False, 'any_err': False}
     eval_proli = [profile for profile in profileli if not profile.errflag]
@@ -286,6 +343,7 @@ def save_output(profileli, opt):
     write_mc_ip_dists('shortest')
     write_mc_ip_dists('lateral')
     write_mc_cluster_summary()
+    write_coords()
     if opt.save_result['any_err']:
         sys.stdout.write("Note: One or more summaries could not be saved.\n")
     if opt.save_result['any_saved']:

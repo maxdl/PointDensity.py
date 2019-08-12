@@ -735,6 +735,7 @@ class OptionData:
         self.output_file_format = 'excel'
         self.output_filename_ext = '.xlsx'
         self.input_filename_ext = '.pd'
+        self.save_coords = True
         self.output_filename_suffix = ''
         self.output_filename_other_suffix = ''
         self.output_filename_date_suffix = True
